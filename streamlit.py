@@ -93,7 +93,7 @@ def sidebar_car_characteristics(mode='search'):
     
     # Si es modo de búsqueda
     if mode == 'search':
-        year = st.sidebar.slider("Año del coche", 2000, 2024, 2015, key="characteristics_year")
+        year = st.sidebar.slider("Año del coche", 2000, 2023, 2015, key="characteristics_year")
         kms = st.sidebar.number_input("Kilómetros recorridos", min_value=0, max_value=500000, value=50000, step=1000, key="characteristics_kms")
         power = st.sidebar.number_input("Potencia (CV)", min_value=50, max_value=600, value=150, step=10, key="characteristics_power")
         fuel = st.sidebar.selectbox("Tipo de combustible", ["Gasolina", "Diésel", "Eléctrico", "Híbrido"], index=0, key="characteristics_fuel")

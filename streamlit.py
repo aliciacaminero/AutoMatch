@@ -1,10 +1,10 @@
-import automatch_streamlit as st
+import streamlit as st
 import pandas as pd
 import joblib  
 import numpy as np 
 import os
 
-# Configuración de página - DEBE SER LA PRIMERA LLAMADA A STREAMLIT
+# Configuración de página 
 st.set_page_config(layout="wide", page_title="AutoMatch", page_icon="🚗")
 
 # Cargar modelos

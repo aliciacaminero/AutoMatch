@@ -35,9 +35,6 @@ def load_car_data():
 # Cargar datos
 df_cars = load_car_data()
 
-# Configuración de página
-#st.set_page_config(layout="wide", page_title="AutoMatch", page_icon="🚗")
-
 # Borrar el estado de la aplicación
 def reset_state():
     for key in st.session_state.keys():
@@ -218,7 +215,7 @@ def buscador_coches():
                 # Predicción de precio y recomendaciones
                 predicted_price, lower_bound, upper_bound = predecir_con_confianza(pipeline, input_data)
                 st.write(f"### Precio estimado: {predicted_price:,.2f} €")
-                st.write(f"### Rango de precio: {lower_bound:,.2f} € - {upper_bound:,.2f} €")
+                #st.write(f"### Rango de precio: {lower_bound:,.2f} € - {upper_bound:,.2f} €")
             
                 # Filtrar coches dentro de un margen de ±5% del precio predicho 
                 margin = 0.05  
@@ -283,18 +280,21 @@ def buscador_coches():
                         'shift': 'cambio',
                         'fuel': 'combustible',
                         'kms': 'kilómetros',
-                        'price': 'precio'
+                        'price': 'precio',
+                        'year': 'año'
                     }
                 
                     # Renombrar columnas
                     formatted_cars = formatted_cars.rename(columns=column_mapping)
-                
+                    
                     # Formatear kilómetros con punto como separador de miles
                     formatted_cars['kilómetros'] = formatted_cars['kilómetros'].apply(lambda x: f"{x:,.0f}".replace(",", "."))
                 
                     # Formatear precio con coma como separador decimal
-                    formatted_cars['precio'] = formatted_cars['precio'].apply(lambda x: f"{x:,.2f}".replace(",", ".").replace(".", ",", 1))
+                    formatted_cars['precio'] = formatted_cars['precio'].apply(lambda x: f"{x:,.2f}".replace(",", " ").replace(".", ",").replace(" ", "."))
                 
+                    formatted_cars['año'] = formatted_cars['año'].apply(lambda x: str(int(x)))
+                    
                     # Formatear potencia sin decimales
                     formatted_cars['potencia'] = formatted_cars['potencia'].apply(lambda x: f"{x:.0f}")
                 
@@ -302,7 +302,7 @@ def buscador_coches():
                 
                     # Definir columnas de visualización - solo columnas que queremos mostrar
                     display_columns = [
-                        'marca', 'modelo', 'versión', 'potencia', 'cambio', 'combustible', 
+                        'marca', 'modelo', 'versión','año', 'potencia', 'cambio', 'combustible', 
                         'kilómetros', 'precio'
                     ]
                 
@@ -315,20 +315,6 @@ def buscador_coches():
                         # Ocultar el índice
                         hide_index=True
                     )
-                    
-                    # Mostrar estadísticas básicas
-                    st.write("### Estadísticas de los resultados")
-                    
-                    # Crear dos columnas
-                    col1, col2 = st.columns(2)
-                    
-                    with col1:
-                        st.metric("Precio medio", f"{page_cars['price'].mean():,.2f} €")
-                        st.metric("Kilómetros promedio", f"{page_cars['kms'].mean():,.0f} km")
-                    
-                    with col2:
-                        st.metric("Potencia media", f"{page_cars['power'].mean():.0f} CV")
-                        st.metric("Antigüedad media", f"{(2025 - page_cars['year'].mean()):.1f} años")
                 
                     # Mostrar información detallada del vendedor para cada recomendación
                     st.write("### Información detallada de los vendedores")
@@ -418,23 +404,10 @@ def valoracion_coches():
                             st.metric("Precio Estimado", f"{predicted_price:,.2f} €")
                             st.write(f"Rango estimado: {lower_bound:,.2f} € - {upper_bound:,.2f} €")
                             
-                            # Información adicional en columnas
-                            col1, col2 = st.columns(2)
-                            
-                            with col1:
-                                st.write("### Detalles del Vehículo")
-                                st.write(f"- **Marca:** {car_characteristics['make']}")
-                                st.write(f"- **Modelo:** {car_characteristics['model']}")
-                                st.write(f"- **Combustible:** {car_characteristics['fuel']}")
-                                st.write(f"- **Tipo de Cambio:** {car_characteristics['shift']}")
-                            
-                            with col2:
-                                st.write("### Métricas")
-                                st.write(f"- **Año:** {car_characteristics['year']} ({car_age} años)")
-                                st.write(f"- **Kilómetros:** {car_kms:,.0f}")
-                                st.write(f"- **Kilómetros por año:** {kms_per_year:,.1f}")
-                                st.write(f"- **Potencia:** {car_power} CV")
-                            
+                            #st.write("### Métricas")
+                            st.write(f"- **Antigüedad:** {car_age} años")
+                            kms_per_year_rounded = round(kms_per_year)
+                            st.write(f"- **Kilómetros por año:** {kms_per_year_rounded:,.0f}".replace(",", "."))  
                             # Agregar gráfico de valor relativo
                             st.write("### Valoración relativa")
                             relative_value = (predicted_price / car_kms) * 1000  # Valor por cada 1000 km
@@ -445,7 +418,7 @@ def valoracion_coches():
                             
                             # Barra de progreso para valor relativo
                             st.progress(scaled_value)
-                            st.write(f"Valor por cada 1000 km: {relative_value:.2f} €")
+                            st.write(f"Valor por cada 1000 kilómetros: {relative_value:,.2f} €".replace(",", "X").replace(".", ",").replace("X", "."))
                             
                             # Indicar si el valor es bueno, medio o bajo
                             if scaled_value > 0.7:

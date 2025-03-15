@@ -18,16 +18,3 @@ Se entrena el modelo de regresión y se ajustan los hiperparámetros si es neces
 Evaluación del Modelo:
 
 Se evalúa el modelo utilizando métricas como el Error Cuadrático Medio (MSE) o Raíz del Error Cuadrático Medio (RMSE).
-Recomendador de Vehículos
-El recomendador de vehículos utiliza un enfoque de filtrado basado en contenido para sugerir vehículos similares a un vehículo dado en función de sus características.
-
-## Preprocesamiento de Datos:
-
-Se seleccionan las características relevantes (por ejemplo, kilometraje, potencia, año, etc.).
-Se normalizan las características utilizando StandardScaler para que todas tengan el mismo rango de valores.
-Entrenamiento del Modelo:
-
-Se entrena un modelo K-Nearest Neighbors (KNN) para encontrar vehículos similares en el conjunto de datos.
-Generación de Recomendaciones:
-
-Dado un vehículo, el sistema recomienda otros vehículos basados en las similitudes de sus características.
